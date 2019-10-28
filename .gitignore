@@ -108,3 +108,6 @@ venv.bak/
 
 # Zappa Settings
 zappa_settings.json
+
+# Flask Settings
+settings.cfg
