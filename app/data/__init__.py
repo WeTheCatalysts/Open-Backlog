@@ -26,17 +26,35 @@ class SteinProvider(Provider):
 
     def fetch_url(self, url):
         content = {}
+        error = None
+        success = False
+        response = None
         try:
             response = requests.get(url, auth=(self._user_name, self._api_password))
             response.raise_for_status()
 
         except HTTPError as http_err:
-            logging.warn(f'HTTP error occurred: {http_err}')  # Python 3.6
+            content = None
+            error = {
+                "message": f'HTTP error occurred: {http_err}',
+                "status": response.status_code
+            }
         except Exception as err:
-            logging.warn(f'Other error occurred: {err}')  # Python 3.6
+            if response is not None:
+                error = {
+                    "message": f'Other error occurred: {err}',
+                    "status": response.status_code
+                }
+            else:
+                error = {
+                    "message": 'Unable to connect to datastore',
+                    "status": 500
+                }
         else:
             content = response.json()
-        return content
+            success = True
+            error = None
+        return content, error, success
 
     def clean_item(self, item):
         clean_item = {}
@@ -44,6 +62,7 @@ class SteinProvider(Provider):
             if '__' not in element:
                 clean_item[element] = item[element]
         return clean_item
+
 
     def build_metadata(self, backlog):
         metadata = {
@@ -64,15 +83,19 @@ class SteinProvider(Provider):
 
     def fetch_backlog(self):
         backlog_url = self.build_url('backlog')
-        items = self.fetch_url(backlog_url)
-        cleaned_backlog = []
-        for item in items:
-            current_item = self.clean_item(item)
-            cleaned_backlog.append(current_item)
-        return {
-            'records': cleaned_backlog,
-            'metadata': self.build_metadata(cleaned_backlog)
-        }
+        items, error, status = self.fetch_url(backlog_url)
+        logging.warn(items)
+        if status:
+            cleaned_backlog = []
+            for item in items:
+                current_item = self.clean_item(item)
+                cleaned_backlog.append(current_item)
+            return {
+                    'records': cleaned_backlog,
+                    'metadata': self.build_metadata(cleaned_backlog)
+            }, error, status
+        else:
+            return items, error, status
 
 
 DefaultProvider = SteinProvider
