@@ -84,7 +84,6 @@ class SteinProvider(Provider):
     def fetch_backlog(self):
         backlog_url = self.build_url('backlog')
         items, error, status = self.fetch_url(backlog_url)
-        logging.warn(items)
         if status:
             cleaned_backlog = []
             for item in items:
@@ -94,6 +93,25 @@ class SteinProvider(Provider):
                     'records': cleaned_backlog,
                     'metadata': self.build_metadata(cleaned_backlog)
             }, error, status
+        else:
+            return items, error, status
+
+
+    def fetch_backlog_item(self, id):
+        backlog_url = self.build_url('backlog')
+        items, error, status = self.fetch_url(backlog_url)
+        if status:
+            item_data = None
+            for item in items:
+                if int(item['id']) == int(id):
+                    item_data = self.clean_item(item)
+            if item_data is not None:
+                return item_data, error, status
+            else:
+                return None, {
+                        "status": 404,
+                        "message": "The specified item could not be found"
+                    }, False
         else:
             return items, error, status
 

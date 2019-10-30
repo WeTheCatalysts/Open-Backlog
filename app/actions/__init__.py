@@ -7,3 +7,6 @@ class Backlog():
 
     def get_backlog(self):
         return Provider(self.__config).fetch_backlog()
+
+    def get_backlog_item(self, id):
+        return Provider(self.__config).fetch_backlog_item(id)

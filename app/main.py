@@ -9,13 +9,20 @@ app = Flask(__name__)
 app.config.from_envvar('APPLICATION_SETTINGS')
 
 
-@app.route("/")
+@app.route("/", methods=["GET"])
 def hello():
     return "Hello, World!"
 
 
-@app.route("/api/v1")
-@app.route("/api/v1/")
+@app.route("/api/v1/", methods=["GET"])
+@app.route("/api/v1", methods=["GET"])
 @utils.returns_json
 def api_get_backlog():
     return actions.Backlog(app.config).get_backlog()
+
+
+@app.route("/api/v1/item/<id>", methods=["GET"])
+@app.route("/api/v1/item/id", methods=["GET"])
+@utils.returns_json
+def api_get_backlog_item(id):
+    return actions.Backlog(app.config).get_backlog_item(id)
