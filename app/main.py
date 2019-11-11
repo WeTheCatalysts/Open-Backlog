@@ -6,12 +6,14 @@ import utils
 import logging
 
 app = Flask(__name__)
+
 app.config.from_envvar('APPLICATION_SETTINGS')
 
 
 @app.route("/", methods=["GET"])
-def hello():
-    return "Hello, World!"
+@utils.returns_html('index.html')
+def get_backlog():
+    return {"message":"Hello World"}, None, True
 
 
 @app.route("/api/v1/", methods=["GET"])
