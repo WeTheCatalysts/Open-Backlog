@@ -1,0 +1,86 @@
+.backlog {
+  background-color: #8393af
+}
+
+.scoping {
+  background-color: #7acbb5
+}
+
+.discovery {
+  background-color: #7c3788
+}
+
+.alpha {
+  background-color: #b74983
+}
+
+.beta {
+  background-color: #d77f39
+}
+
+.live {
+  background-color: #8b9848
+}
+
+.depracated {
+  background-color: #b5393f
+}
+
+.retired {
+  background-color: #999
+}
+
+.card-header {
+    color: #fff
+}
+
+.card-stage-name {
+  font-size: 11px;
+  font-weight: bold;
+  white-space:nowrap;
+}
+
+.badge {
+  font-size: 11px;
+}
+
+.stage-badge {
+  color: #ffffff;
+}
+
+.status-badge {
+  border: 1px solid #999;
+  background-color: transparent;
+}
+
+.active {
+  border-color: #f00;
+  color: #f00;
+}
+
+.inactive {
+  border-color: #333;
+  color: #333;
+}
+
+strong {
+  font-weight: bold;
+}
+
+html {
+  font-size: 14px;
+}
+
+h1, h2 {
+  color:#999;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.pricing-header {
+  max-width: 700px;
+}
