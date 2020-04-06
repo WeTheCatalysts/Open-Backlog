@@ -1,1 +1,28 @@
-Hello from template again
+{% extends "base.html" %}
+
+{% block main %}
+
+<div class="container">
+  <div class="px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+    <h1 class="display-4">Pipeline</h1>
+    <p class="lead">Pipeline is an initiative from The Catalyst. It aims to capture the work and intentions of the charity sector in response to COVID-19 so that collaboration and reuse can occur, and wasteful duplication is hopefully avoided.</p>
+    <p class="lead">There are currently {{metadata.organisation_count}} organisations participating. Add your organisation.</p>
+  </div>
+</div>
+
+<div class="container">
+  <div class="px-3 py-3 pt-md-4 pb-md-1 mx-auto">
+    <h2 class="display-5">Organisational backlogs</h2>
+    <br />
+    {% for record in records %}
+        <p>
+          {% if record.steinApiId %}
+            <a href='/organisations/{{ record.organisationSlug }}'>{{record.organisationName}}</a>
+          {% endif %}
+        </p>
+    {% endfor %}
+
+  </div>
+</div>
+
+{% endblock %}

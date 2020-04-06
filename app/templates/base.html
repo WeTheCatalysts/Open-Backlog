@@ -1,0 +1,52 @@
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <title>
+      {% block title %}Pipeline, a Catalyst initiative to map activity across the charitable sector{% endblock %}
+    </title>
+
+
+
+    <!-- Bootstrap core CSS -->
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link href="/static/css/base.css" rel="stylesheet" />
+
+  </head>
+  <body>
+
+  {% include "fragments/navbar.njk"%}
+
+  {% block main %}
+  {% endblock %}
+
+<div class="container">
+  <footer class="pt-4 my-md-5 pt-md-5 border-top">
+    <div class="row">
+      <div class="col-12 col-md">
+        <h5>Pipeline</h5>
+        {# small class="d-block mb-3 text-muted">Available under an MIT License.</small> #}
+      </div>
+      <div class="col-6 col-md">
+        <h6>About</h6>
+        <ul class="list-unstyled text-small">
+          <li><a class="text-muted" href="https://medium.com/wethecatalysts/pipeline/home">Blog</a></li>
+          <li><a class="text-muted" href="https://trello.com/b/drOgF24s/backlog-pipeline" target="_blank">Backlog on Trello</a></li>
+        </ul>
+      </div>
+      <div class="col-6 col-md">
+        <h6>Actions</h6>
+        <ul class="list-unstyled text-small">
+          <li><a class="text-muted" href="#">Ask for your organisation to be added</a></li>
+          <li><a class="text-muted" href="https://github.com/WeTheCatalysts/Open-Backlog/issues" target="_blank">File an issue on GitHub</a></li>
+        </ul>
+      </div>
+
+    </div>
+  </footer>
+</div>
+</body>
+</html>

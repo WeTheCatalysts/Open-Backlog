@@ -1,0 +1,20 @@
+<div class="container">
+  <div class="card-deck mb-3 text-center">
+  {% for stage in constants.stages %}
+  <div class="card shadow-sm">
+    <div class="card-header {{stage}}">
+      <div class="card-stage-name">{{stage|title}}</div>
+    </div>
+    <div class="card-body">
+      <h1 class="card-title pricing-card-title">
+      {% if metadata.stats.stages[stage] %}
+        {{metadata.stats.stages[stage]}}
+      {% else %}
+        0
+      {% endif %}
+      </h1>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+</div>

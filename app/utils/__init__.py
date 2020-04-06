@@ -2,10 +2,46 @@ from flask import Response, render_template
 from functools import wraps
 
 import json
+import markdown
 
 import constants
 
 import logging
+
+
+STRUCTURES = {
+    "backlog": {
+        "description": "markdown",
+        "shortDescription": "markdown",
+        "blogURL": "commaseparated",
+        "additionalInfoURL": "commaseparated",
+        "blogURL": "commaseparated",
+        "lifeEvents": "commaseparated",
+        "servicePatterns": "commaseparated",
+        "beneficiaries": "commaseparated",
+        "suppliers": "commaseparated",
+        "workingWith": "commaseparated",
+        "sameAs": "commaseparated",
+        "latestProjectUpdate": "markdown"
+    }
+}
+
+def applymarkdown(content):
+    if content:
+        return markdown.markdown(content)
+    else:
+        return content
+
+
+def commaseparated_to_array(content):
+    array = []
+    if content:
+        if ',' in content:
+            array = content.split(',')
+        else:
+            array.append(content)
+        array = [item.strip() for item in array]
+    return array
 
 
 def action_unwrapper(action_response, response_format='json', template_name=None):
@@ -16,6 +52,15 @@ def action_unwrapper(action_response, response_format='json', template_name=None
         if response_format == 'json':
             return json_response(content)
         else:
+            if content['datatype'] in STRUCTURES:
+                structure = STRUCTURES[content['datatype']]
+                for record in content['records']:
+                    for field in record:
+                        if field in structure:
+                            if structure[field] == 'markdown':
+                                record[field] = applymarkdown(record[field])
+                            if structure[field] == 'commaseparated':
+                                record[field] = commaseparated_to_array(record[field])
             return html_response(content, template_name=template_name)
     else:
         if response_format == 'json':
