@@ -2,9 +2,12 @@ import requests
 from requests.exceptions import HTTPError
 
 import logging
+import constants
 
 
 STEIN_BASE_URL = "https://api.steinhq.com/v1/storages/"
+
+
 
 class Provider():
 
@@ -12,9 +15,9 @@ class Provider():
     _api_password = ''
     _user_name = 'api_user'
 
-    def __init__(self, config):
-        self._api_id = config.get('STEIN_API_ID')
-        self._api_password = config.get('STEIN_API_PASSWORD')
+    def __init__(self, api_id, api_password):
+        self._api_id = api_id
+        self._api_password = api_password
     pass
 
 
@@ -66,19 +69,46 @@ class SteinProvider(Provider):
 
     def build_metadata(self, backlog):
         metadata = {
-            "statuses": {},
-            "stages": {}
+            "stats": {
+                "statuses": {},
+                "stages": {},
+                "itemcount": 0
+            }
         }
+        itemcount = 0
         for item in backlog:
-            if item['status'] in metadata['statuses']:
-                metadata['statuses'][item['status']] += 1
+            itemcount += 1
+            if item['status'] in metadata['stats']['statuses']:
+                metadata['stats']['statuses'][item['status']] += 1
             else:
-                metadata['statuses'][item['status']] = 1
-            if item['stage'] in metadata['stages']:
-                metadata['stages'][item['stage']] += 1
+                metadata['stats']['statuses'][item['status']] = 1
+            if item['stage'] in metadata['stats']['stages']:
+                metadata['stats']['stages'][item['stage']] += 1
             else:
-                metadata['stages'][item['stage']] = 1
+                metadata['stats']['stages'][item['stage']] = 1
+        metadata['itemcount'] = itemcount
         return metadata
+
+
+    def fetch_organisations(self):
+        organisation_url = self.build_url('organisations')
+        items, error, status = self.fetch_url(organisation_url)
+        if status:
+            organisation_count = 0
+            cleaned_organisations = []
+            for item in items:
+                if item["steinApiId"] is not None:
+                    current_item = item
+                    organisation_count += 1
+                    cleaned_organisations.append(current_item)
+            return {
+                    'metadata': {'organisation_count': organisation_count},
+                    'datatype': 'organisations',
+                    'records': cleaned_organisations,
+            }, error, status
+        else:
+            return items, error, status
+
 
 
     def fetch_backlog(self):
@@ -88,25 +118,37 @@ class SteinProvider(Provider):
             cleaned_backlog = []
             for item in items:
                 current_item = self.clean_item(item)
-                cleaned_backlog.append(current_item)
+                if current_item['status'] not in ['hidden']:
+                    if current_item['initiativeName'] is not None:
+                        cleaned_backlog.append(current_item)
             return {
                     'records': cleaned_backlog,
-                    'metadata': self.build_metadata(cleaned_backlog)
+                    'metadata': self.build_metadata(cleaned_backlog),
+                    'datatype': 'backlog',
+                    'constants': {
+                        'stages':constants.STAGES
+                    }
             }, error, status
         else:
             return items, error, status
 
 
-    def fetch_backlog_item(self, id):
+    def fetch_backlog_item(self, itemId):
+        logging.warn(itemId)
         backlog_url = self.build_url('backlog')
         items, error, status = self.fetch_url(backlog_url)
         if status:
             item_data = None
             for item in items:
-                if int(item['id']) == int(id):
-                    item_data = self.clean_item(item)
+                if item['itemId']:
+                    if item['itemId'] == itemId:
+                        item_data = self.clean_item(item)
             if item_data is not None:
-                return item_data, error, status
+                return {
+                        'record': item_data,
+                        'metadata': {},
+                        'datatype': 'record'
+                        } , error, status
             else:
                 return None, {
                         "status": 404,
