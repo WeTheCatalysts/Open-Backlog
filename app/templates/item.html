@@ -1,10 +1,23 @@
 {% extends "base.html" %}
 
 {% block main %}
+<section class="proto-style-block phases proto-spacer">
+  <div class="grid-container">
+    <div class="column-full-width">
+      <div class="inner">
+        <p class="body-copy-small"><a href="#">Home</a> &gt; <a href="/">Pipeline</a> &gt; <a href='/organisations/{{ metadata.organisationSlug }}'>{{metadata.organisationName}}</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
 
-<div class="container">
-  {% set view = 'full' %}
-  {% include "fragments/record.njk"%}
-</div>
-
+<section>
+  <div class="grid-container">
+    <div class="column-full-width">
+      {% set view = 'full' %}
+      {% include "fragments/record.njk"%}
+    </div>
+  </div>
+</section>
 {% endblock %}

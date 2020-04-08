@@ -1,20 +1,16 @@
-<div class="container">
-  <div class="card-deck mb-3 text-center">
+<div class="grid-container">
   {% for stage in constants.stages %}
-  <div class="card shadow-sm">
-    <div class="card-header {{stage}}">
-      <div class="card-stage-name">{{stage|title}}</div>
-    </div>
-    <div class="card-body">
-      <h1 class="card-title pricing-card-title">
+  <div class="grid-column proto-pipeline-phase">
+    <div class="inner">
+      <span class="phase-title is-{{stage}}">{{stage|title}}</span>
+      <span class="heading-extra-large phase-count"><a href="#">
       {% if metadata.stats.stages[stage] %}
         {{metadata.stats.stages[stage]}}
       {% else %}
         0
       {% endif %}
-      </h1>
+      </a></span>
     </div>
   </div>
   {% endfor %}
-</div>
 </div>

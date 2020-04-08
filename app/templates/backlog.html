@@ -2,42 +2,62 @@
 
 {% block main %}
 
-<div class="px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
-  <h1 class="display-4">{{metadata.organisationName}}</h1>
 
-  <p class="lead">There are currently
-  {% if metadata.itemcount == 0 %}
-  no
-  {% else %}
-  {% for status in metadata.stats.statuses %}
-    {% if not loop.first and not loop.last %}
-    ,
+<main class="main">
+    <section class="proto-style-block phases proto-spacer">
+      <div class="grid-container">
+        <div class="column-full-width">
+          <div class="inner">
+            <p class="body-copy-small"><a
+                href="#">Home</a> &gt; <a
+                href="/">Pipeline</a></p>
+            <h1 class="heading-large proto-spacer space-by-2">{{metadata.organisationName}}</h1>
+          </div>
+        </div>
+      </div>
+
+      {% include "fragments/stage_panels.njk"%}
+
+      <div class="grid-container">
+        <div class="column-full-width">
+          There are currently
+          {% if metadata.itemcount == 0 %}
+          no
+          {% else %}
+          {% if metadata.status_count == 1 %}
+          {% for status in metadata.stats.statuses %}
+            {{metadata.stats.statuses[status]}} {{status|title}}
+          {% endfor %}
+          {% else %}
+            {% for status in metadata.stats.statuses %}
+            {% if not loop.first and not loop.last %}
+              ,
+            {% endif %}
+            {% if loop.last %}
+              and
+              {% endif %}
+              {{metadata.stats.statuses[status]}} {{status|title}}
+              {% endfor %}
+          {% endif %}
+          {% endif %}
+          items for this organisation.
+        </div>
+      </div>
+    </section>
+
+    {% if metadata.itemcount != 0 %}
+
+    {% set view = 'list' %}
+    {% for record in records %}
+    <section>
+      <div class="grid-container">
+        <div class="column-full-width">
+            {% include "fragments/record.njk"%}
+        </div>
+      </div>
+    </section>
+    {% endfor %}
     {% endif %}
-    {% if loop.last %}
-      and
-    {% endif %}
-    <strong class="{{status}}">{{metadata.stats.statuses[status]}} {{status|title}}</strong>
-  {% endfor %}
-  {% endif %}
-  items for this organisation.
-  </p>
-</div>
-
-{% include "fragments/stage_panels.njk"%}
-
-{% if metadata.itemcount != 0 %}
-<div class="container">
-  <hr/>
-  <div class="px-3 py-3 pt-md-4 pb-md-1 mx-auto">
-    <h2 class="display-5">Items in the pipeline</h2>
-  </div>
-  {% set view = 'list' %}
-  {% for record in records %}
-    <div class="px-3 py-2 mt-md-4 mx-auto shadow-sm border">
-      {% include "fragments/record.njk"%}
-    </div>
-  {% endfor %}
-</div>
-{% endif %}
+  </main>
 
 {% endblock %}
