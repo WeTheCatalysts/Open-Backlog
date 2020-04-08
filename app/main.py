@@ -48,6 +48,7 @@ def get_backlog(organisation_slug):
         backlog, error, success = actions.Backlog(organisation_api_id, organisation_api_password).get_backlog()
         if success:
             backlog["metadata"]["organisationName"] = organisation_name
+            backlog["metadata"]["organisationSlug"] = organisation_slug            
         return backlog, error, success
     else:
         return None, 'no_organisation', False

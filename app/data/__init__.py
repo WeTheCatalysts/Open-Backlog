@@ -1,4 +1,7 @@
+from flask import current_app
+
 import requests
+import datetime
 from requests.exceptions import HTTPError
 
 import logging
@@ -6,6 +9,50 @@ import constants
 
 
 STEIN_BASE_URL = "https://api.steinhq.com/v1/storages/"
+
+
+class CachedProvider():
+
+    def fetch_from_cache(self, key):
+        if key in current_app.config:
+            logging.warn("HAS KEY")
+            if current_app.config[key]:
+                logging.warn("HAS DATA")
+                cached_data =  current_app.config[key]
+                logging.warn(cached_data)
+                logging.warn("FROM CACHE")
+                if cached_data['expires'] > datetime.datetime.now():
+                    logging.warn("NOT EXPIRED")
+                    return cached_data['records']
+                else:
+                    logging.warn("EXPIRED")
+                    self.expire_from_cache(key)
+                    return False
+            else:
+                return False
+        else:
+            return False
+
+    def expire_from_cache(self, key):
+        logging.warn("EXPIRE FROM CACHE")
+        del current_app.config[key]
+
+
+    def add_to_cache(self, key, object):
+        logging.warn("ADD TO CACHE")
+        cached_data = {
+            "expires": datetime.datetime.now() + datetime.timedelta(seconds=constants.CACHE_EXPIRY),
+            "records": object
+        }
+        logging.warn(cached_data)
+        current_app.config[key] = cached_data
+
+    def build_key(self, item_type, organisation, identifier):
+        if identifier:
+            key = item_type + "_" + organisation + "_" + identifier
+        else:
+            key  = item_type + "_" + organisation
+        return key
 
 
 
@@ -91,46 +138,61 @@ class SteinProvider(Provider):
 
 
     def fetch_organisations(self):
-        organisation_url = self.build_url('organisations')
-        items, error, status = self.fetch_url(organisation_url)
-        if status:
-            organisation_count = 0
-            cleaned_organisations = []
-            for item in items:
-                if item["steinApiId"] is not None:
-                    current_item = item
-                    organisation_count += 1
-                    cleaned_organisations.append(current_item)
-            return {
-                    'metadata': {'organisation_count': organisation_count},
-                    'datatype': 'organisations',
-                    'records': cleaned_organisations,
-            }, error, status
+        cached_data = CachedProvider().fetch_from_cache('organisations')
+        if cached_data:
+            return cached_data, None, True
         else:
-            return items, error, status
+            organisation_url = self.build_url('organisations')
+            items, error, status = self.fetch_url(organisation_url)
+            if status:
+                organisation_count = 0
+                cleaned_organisations = []
+                for item in items:
+                    if item["steinApiId"] is not None:
+                        current_item = item
+                        organisation_count += 1
+                        cleaned_organisations.append(current_item)
+                data_object = {
+                        'metadata': {'organisation_count': organisation_count},
+                        'datatype': 'organisations',
+                        'records': cleaned_organisations,
+                }
+                CachedProvider().add_to_cache('organisations', data_object)
+
+                return data_object, error, status
+            else:
+                return items, error, status
 
 
 
     def fetch_backlog(self):
-        backlog_url = self.build_url('backlog')
-        items, error, status = self.fetch_url(backlog_url)
-        if status:
-            cleaned_backlog = []
-            for item in items:
-                current_item = self.clean_item(item)
-                if current_item['status'] not in ['hidden']:
-                    if current_item['initiativeName'] is not None:
-                        cleaned_backlog.append(current_item)
-            return {
-                    'records': cleaned_backlog,
-                    'metadata': self.build_metadata(cleaned_backlog),
-                    'datatype': 'backlog',
-                    'constants': {
-                        'stages':constants.STAGES
-                    }
-            }, error, status
+        key = CachedProvider().build_key('backlog', self._api_id, None)
+        cached_data = CachedProvider().fetch_from_cache(key)
+        if cached_data:
+            logging.warn(cached_data)
+            return cached_data, None, True
         else:
-            return items, error, status
+            backlog_url = self.build_url('backlog')
+            items, error, status = self.fetch_url(backlog_url)
+            if status:
+                cleaned_backlog = []
+                for item in items:
+                    current_item = self.clean_item(item)
+                    if current_item['status'] not in ['hidden']:
+                        if current_item['initiativeName'] is not None:
+                            cleaned_backlog.append(current_item)
+                data_object = {
+                        'records': cleaned_backlog,
+                        'metadata': self.build_metadata(cleaned_backlog),
+                        'datatype': 'backlog',
+                        'constants': {
+                            'stages':constants.STAGES
+                        }
+                    }
+                CachedProvider().add_to_cache(key, data_object)
+                return data_object, error, status
+            else:
+                return items, error, status
 
 
     def fetch_backlog_item(self, itemId):

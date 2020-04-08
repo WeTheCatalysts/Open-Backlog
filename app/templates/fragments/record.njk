@@ -2,7 +2,7 @@
   <p>
       {% if view == 'list' %}
         <h3>
-          <a href='/organisations/the-paddox/{{record.itemId}}'>{{record.initiativeName}}</a>
+          <a href='/organisations/{{metadata.organisationSlug}}/{{record.itemId}}'>{{record.initiativeName}}</a>
           <span class="badge stage-badge {{record.stage}}">{{record.stage|title}}</span>
           <span class="badge status-badge {{record.status}}">{{record.status|title}}</span>
         </h3>
@@ -36,7 +36,9 @@
     {% if record.productUrl %}
     <p><strong>URL:</strong> <a href="" target="_blank">{{record.productUrl}}</a></p>
     {% endif %}
-    <div><strong>Created at:</strong> {{record.createdAt}} {% if record.updatedAt %}| <strong>Updated at:</strong> {{record.updatedAt}} {% endif %}</div>
+    {% if record.createdAt %}
+    <div><strong>Created at:</strong> {{record.createdAt.strftime('%d %B %Y %H:%M')}} {% if record.updatedAt %}| <strong>Updated at:</strong> {{record.updatedAt.strftime('%d %B %Y %H:%M')}} {% endif %}</div>
     <br />
+    {% endif %}
   </p>
 </div>

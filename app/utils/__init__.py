@@ -2,6 +2,7 @@ from flask import Response, render_template
 from functools import wraps
 
 import json
+import datetime
 import markdown
 
 import constants
@@ -22,8 +23,27 @@ STRUCTURES = {
         "suppliers": "commaseparated",
         "workingWith": "commaseparated",
         "sameAs": "commaseparated",
-        "latestProjectUpdate": "markdown"
+        "latestProjectUpdate": "markdown",
+        "createdAt": "datetime",
+        "updatedAt": "datetime"
+    },
+    "record": {
+        "description": "markdown",
+        "shortDescription": "markdown",
+        "blogURL": "commaseparated",
+        "additionalInfoURL": "commaseparated",
+        "blogURL": "commaseparated",
+        "lifeEvents": "commaseparated",
+        "servicePatterns": "commaseparated",
+        "beneficiaries": "commaseparated",
+        "suppliers": "commaseparated",
+        "workingWith": "commaseparated",
+        "sameAs": "commaseparated",
+        "latestProjectUpdate": "markdown",
+        "createdAt": "datetime",
+        "updatedAt": "datetime"
     }
+
 }
 
 def applymarkdown(content):
@@ -39,9 +59,32 @@ def commaseparated_to_array(content):
         if ',' in content:
             array = content.split(',')
         else:
-            array.append(content)
+            if isinstance(content, str):
+                array.append(content)
+            else:
+                array = content
         array = [item.strip() for item in array]
     return array
+
+def from_iso_datetime(content):
+    if isinstance(content, str):
+        try:
+            return datetime.datetime.strptime(content, '%Y-%m-%dT%H:%M:%S.%fZ')
+        except:
+            return None
+    else:
+        return content
+
+def transform_record(record, structure):
+    for field in record:
+        if field in structure:
+            if structure[field] == 'markdown':
+                record[field] = applymarkdown(record[field])
+            if structure[field] == 'commaseparated':
+                record[field] = commaseparated_to_array(record[field])
+            if structure[field] == 'datetime':
+                record[field] = from_iso_datetime(record[field])
+    return record
 
 
 def action_unwrapper(action_response, response_format='json', template_name=None):
@@ -52,15 +95,14 @@ def action_unwrapper(action_response, response_format='json', template_name=None
         if response_format == 'json':
             return json_response(content)
         else:
+            transformable_content = content.copy()
             if content['datatype'] in STRUCTURES:
                 structure = STRUCTURES[content['datatype']]
-                for record in content['records']:
-                    for field in record:
-                        if field in structure:
-                            if structure[field] == 'markdown':
-                                record[field] = applymarkdown(record[field])
-                            if structure[field] == 'commaseparated':
-                                record[field] = commaseparated_to_array(record[field])
+                if 'record' in transformable_content:
+                    transformable_content['record'] = transform_record(transformable_content['record'], structure)
+                else:
+                    for record in transformable_content['records']:
+                        record = transform_record(record, structure)
             return html_response(content, template_name=template_name)
     else:
         if response_format == 'json':
