@@ -134,6 +134,7 @@ class SteinProvider(Provider):
             else:
                 metadata['stats']['stages'][item['stage']] = 1
         metadata['itemcount'] = itemcount
+        metadata['status_count'] = len(metadata['stats']['statuses'])
         return metadata
 
 
