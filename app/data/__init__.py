@@ -161,7 +161,6 @@ class SteinProvider(Provider):
         key = CachedProvider().build_key('backlog', self._api_id, None)
         cached_data = CachedProvider().fetch_from_cache(key)
         if cached_data:
-            logging.warn(cached_data)
             return cached_data, None, True
         else:
             backlog_url = self.build_url('backlog')
@@ -188,7 +187,6 @@ class SteinProvider(Provider):
 
 
     def fetch_backlog_item(self, itemId):
-        logging.warn(itemId)
         backlog_url = self.build_url('backlog')
         items, error, status = self.fetch_url(backlog_url)
         if status:
