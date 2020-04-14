@@ -13,8 +13,8 @@
 .color-5 {
   background-color: #09CA77; }
 
-/* http://meyerweb.com/eric/tools/css/reset/
-   v2.0b1 | 201101
+/* http://meyerweb.com/eric/tools/css/reset/ 
+   v2.0b1 | 201101 
    NOTE: WORK IN PROGRESS
    USE WITH CAUTION AND TEST WITH ABANDON */
 html, body, div, span, applet, object, iframe,
@@ -147,6 +147,87 @@ table {
   font-style: normal;
   src: url("../fonts/Inter-SemiBold-slnt=0.ttf") format("truetype"); }
 
+input.button,
+a.button,
+.button {
+  transition: background-color 0.4s ease;
+  font-size: 14px;
+  line-height: 24px;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  font-family: "Inter-Semi-Bold", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  padding: 14px 17px 12px 17px;
+  font-family: "Inter-Semi-Bold", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  background-color: #0a0039;
+  border: none;
+  border-radius: 25px;
+  color: #fff;
+  display: inline-block;
+  width: auto;
+  -webkit-appearance: none;
+  -webkit-border-radius: none;
+  text-align: center;
+  text-decoration: none;
+  width: 100%; }
+  @media screen and (min-width: 600px) {
+    input.button,
+    a.button,
+    .button {
+      border-radius: 25px;
+      padding: 10px 40px 10px 40px;
+      width: auto; } }
+  input.button:hover,
+  a.button:hover,
+  .button:hover {
+    transition: background-color 0.2s ease;
+    background-color: #019B59;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    text-shadow: none;
+    text-decoration: none; }
+
+.phase-banner {
+  font-size: 14px;
+  line-height: 24px;
+  margin-top: 10px;
+  margin-bottom: 10px; }
+  @media screen and (min-width: 600px) {
+    .phase-banner {
+      font-size: 16px;
+      line-height: 22px; } }
+  .phase-banner .phase-notice {
+    position: relative;
+    top: 1px;
+    left: 6px; }
+
+.phase-label {
+  font-size: 12px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  font-family: "Inter-Semi-Bold", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  line-height: 24px;
+  height: 24px;
+  display: inline-block;
+  padding: 0 12px;
+  text-align: center; }
+  .phase-label.is-alpha {
+    color: #fff;
+    background-color: #E34096; }
+  .phase-label.is-beta {
+    color: #fff;
+    background-color: #DF6300; }
+  .phase-label.is-discovery {
+    color: #fff;
+    background-color: #0C9DEF; }
+  .phase-label.is-idea {
+    background-color: rgba(12, 157, 239, 0.25); }
+  .phase-label.is-live {
+    color: #fff;
+    background-color: #019B59; }
+  .phase-label.is-scoping {
+    background-color: rgba(12, 157, 239, 0.5); }
+
 body {
   font-size: 16px;
   line-height: 22px;
@@ -163,10 +244,18 @@ body {
   display: block;
   height: 40px; }
 
+.header-logo {
+  position: absolute;
+  top: 20px; }
+  .header-logo .logo {
+    height: 24px; }
+
 .header {
-  padding: 15px 0;
+  width: 100%;
+  height: 70px;
+  top: 0;
+  z-index: 99;
   border-bottom: 10px solid #09CA77;
-  max-height: 90px;
   background-color: #0a0039; }
 
 .main {
@@ -175,7 +264,6 @@ body {
 .footer {
   padding: 30px 0;
   margin-top: 2em;
-  min-height: 240px;
   background-color: #f5f5f5; }
 
 .type,
@@ -362,41 +450,13 @@ ul ul {
 a {
   color: #0a0039;
   text-decoration: underline; }
+  a.no-underline {
+    text-decoration: none; }
+    a.no-underline:hover {
+      text-decoration: underline; }
 
 img {
   width: 100%; }
-
-  .phase-banner {
-    font-size: 14px;
-    line-height: 24px;
-    margin-top: 10px;
-    margin-bottom: 10px; }
-    @media screen and (min-width: 600px) {
-      .phase-banner {
-        font-size: 16px;
-        line-height: 22px; } }
-    .phase-banner .phase-label {
-      font-size: 12px;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      font-family: "Inter-Semi-Bold", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
-      line-height: 24px;
-      height: 24px;
-      display: inline-block;
-      padding: 0 12px;
-      text-align: center; }
-      .phase-banner .phase-label.is-alpha {
-        color: #fff;
-        background-color: #E34096; }
-      .phase-banner .phase-label.is-beta {
-        color: #fff;
-        background-color: #DF6300; }
-    .phase-banner .phase-notice {
-      position: relative;
-      top: 1px;
-      left: 6px; }
-
-
 
 .small {
   font-size: 14px;
@@ -405,6 +465,145 @@ img {
     .small {
       font-size: 16px;
       line-height: 22px; } }
+
+.bottom-border {
+  border-bottom: 1px solid rgba(10, 0, 57, 0.1); }
+
+.top-border {
+  border-top: 1px solid rgba(10, 0, 57, 0.1); }
+
+.bottom-border-2 {
+  border-bottom: 2px solid rgba(10, 0, 57, 0.1); }
+
+.pipeline-item {
+  position: relative; }
+  .pipeline-item .phase-label {
+    position: absolute;
+    right: 0;
+    top: 4px; }
+    @media screen and (min-width: 960px) {
+      .pipeline-item .phase-label {
+        top: 8px; } }
+
+.vertical-spacing-bottom-0-25 {
+  margin-bottom: 7.5px; }
+  @media screen and (min-width: 600px) {
+    .vertical-spacing-bottom-0-25 {
+      margin-bottom: 15px; } }
+  @media screen and (min-width: 960px) {
+    .vertical-spacing-bottom-0-25 {
+      margin-bottom: 11.25px; } }
+  @media screen and (min-width: 1800px) {
+    .vertical-spacing-bottom-0-25 {
+      margin-bottom: 15px; } }
+
+.vertical-spacing-bottom-0-5 {
+  margin-bottom: 15px; }
+  @media screen and (min-width: 600px) {
+    .vertical-spacing-bottom-0-5 {
+      margin-bottom: 30px; } }
+  @media screen and (min-width: 960px) {
+    .vertical-spacing-bottom-0-5 {
+      margin-bottom: 22.5px; } }
+  @media screen and (min-width: 1800px) {
+    .vertical-spacing-bottom-0-5 {
+      margin-bottom: 30px; } }
+
+.vertical-spacing-bottom {
+  margin-bottom: 30px; }
+  @media screen and (min-width: 600px) {
+    .vertical-spacing-bottom {
+      margin-bottom: 60px; } }
+  @media screen and (min-width: 960px) {
+    .vertical-spacing-bottom {
+      margin-bottom: 45px; } }
+  @media screen and (min-width: 1800px) {
+    .vertical-spacing-bottom {
+      margin-bottom: 60px; } }
+
+.vertical-spacing-bottom-2 {
+  margin-bottom: 60px; }
+  @media screen and (min-width: 600px) {
+    .vertical-spacing-bottom-2 {
+      margin-bottom: 120px; } }
+  @media screen and (min-width: 960px) {
+    .vertical-spacing-bottom-2 {
+      margin-bottom: 90px; } }
+  @media screen and (min-width: 1800px) {
+    .vertical-spacing-bottom-2 {
+      margin-bottom: 120px; } }
+
+.vertical-spacing-bottom-3 {
+  margin-bottom: 90px; }
+  @media screen and (min-width: 600px) {
+    .vertical-spacing-bottom-3 {
+      margin-bottom: 180px; } }
+  @media screen and (min-width: 960px) {
+    .vertical-spacing-bottom-3 {
+      margin-bottom: 135px; } }
+  @media screen and (min-width: 1800px) {
+    .vertical-spacing-bottom-3 {
+      margin-bottom: 180px; } }
+
+.vertical-spacing-bottom-4 {
+  margin-bottom: 120px; }
+  @media screen and (min-width: 600px) {
+    .vertical-spacing-bottom-4 {
+      margin-bottom: 240px; } }
+  @media screen and (min-width: 960px) {
+    .vertical-spacing-bottom-4 {
+      margin-bottom: 180px; } }
+  @media screen and (min-width: 1800px) {
+    .vertical-spacing-bottom-4 {
+      margin-bottom: 240px; } }
+
+.vertical-spacing-top-0-25 {
+  margin-top: 7.5px; }
+  @media screen and (min-width: 600px) {
+    .vertical-spacing-top-0-25 {
+      margin-top: 15px; } }
+  @media screen and (min-width: 960px) {
+    .vertical-spacing-top-0-25 {
+      margin-top: 11.25px; } }
+  @media screen and (min-width: 1800px) {
+    .vertical-spacing-top-0-25 {
+      margin-top: 15px; } }
+
+.vertical-spacing-top-0-5 {
+  margin-top: 15px; }
+  @media screen and (min-width: 600px) {
+    .vertical-spacing-top-0-5 {
+      margin-top: 30px; } }
+  @media screen and (min-width: 960px) {
+    .vertical-spacing-top-0-5 {
+      margin-top: 22.5px; } }
+  @media screen and (min-width: 1800px) {
+    .vertical-spacing-top-0-5 {
+      margin-top: 30px; } }
+
+.vertical-spacing-top {
+  margin-top: 30px; }
+  @media screen and (min-width: 600px) {
+    .vertical-spacing-top {
+      margin-top: 60px; } }
+  @media screen and (min-width: 960px) {
+    .vertical-spacing-top {
+      margin-top: 45px; } }
+  @media screen and (min-width: 1800px) {
+    .vertical-spacing-top {
+      margin-top: 60px; } }
+
+.vertical-spacing-top-2 {
+  margin-top: 60px; }
+  @media screen and (min-width: 600px) {
+    .vertical-spacing-top-2 {
+      margin-top: 120px; } }
+  @media screen and (min-width: 960px) {
+    .vertical-spacing-top-2 {
+      margin-top: 90px; } }
+  @media screen and (min-width: 1800px) {
+    .vertical-spacing-top-2 {
+      margin-top: 120px; } }
 
 .proto-style-block {
   display: block;
