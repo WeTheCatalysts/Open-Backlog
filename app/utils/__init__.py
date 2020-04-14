@@ -3,6 +3,7 @@ from functools import wraps
 
 import json
 import datetime
+import math
 import markdown
 
 import constants
@@ -12,8 +13,6 @@ import logging
 
 STRUCTURES = {
     "backlog": {
-        "description": "markdown",
-        "shortDescription": "markdown",
         "blogURL": "commaseparated",
         "additionalInfoURL": "commaseparated",
         "blogURL": "commaseparated",
@@ -23,13 +22,10 @@ STRUCTURES = {
         "suppliers": "commaseparated",
         "workingWith": "commaseparated",
         "sameAs": "commaseparated",
-        "latestProjectUpdate": "markdown",
         "createdAt": "datetime",
         "updatedAt": "datetime"
     },
     "record": {
-        "description": "markdown",
-        "shortDescription": "markdown",
         "blogURL": "commaseparated",
         "additionalInfoURL": "commaseparated",
         "blogURL": "commaseparated",
@@ -39,12 +35,49 @@ STRUCTURES = {
         "suppliers": "commaseparated",
         "workingWith": "commaseparated",
         "sameAs": "commaseparated",
-        "latestProjectUpdate": "markdown",
         "createdAt": "datetime",
         "updatedAt": "datetime"
     }
 
 }
+
+def humanize_timesince(date):
+    delta = datetime.datetime.now() - date
+
+    num_years = math.floor(delta.days / 365)
+    if (num_years >= 1):
+        if num_years == 1:
+            return str(num_years) + " year ago"
+        else:
+            return str(num_years) + " years ago"
+
+    num_weeks = math.floor(delta.days / 7)
+    if (num_weeks >= 1):
+        if num_weeks == 1:
+            return str(num_weeks) + " week ago"
+        else:
+            return str(num_weeks) + " weeks ago"
+
+    if (delta.days >= 1):
+        if delta.days == 1:
+            return str(delta.days) +  " day ago"
+        else:
+            return str(delta.days) +  " days ago"
+
+    num_hours = math.floor(delta.seconds / 3600)
+    if (num_hours >= 1):
+        return str(num_hours) +  " hour ago"
+    else:
+        return str(num_hours) +  " hours ago"
+
+    num_minutes = math.floor(delta.seconds / 60)
+    if (num_minutes >= 1):
+        return str(num_minutes) +  " minute ago"
+    else:
+        return str(num_minutes) +  " minutes ago"
+
+    return "just a few seconds ago"
+
 
 def applymarkdown(content):
     if content:
@@ -78,8 +111,6 @@ def from_iso_datetime(content):
 def transform_record(record, structure):
     for field in record:
         if field in structure:
-            if structure[field] == 'markdown':
-                record[field] = applymarkdown(record[field])
             if structure[field] == 'commaseparated':
                 record[field] = commaseparated_to_array(record[field])
             if structure[field] == 'datetime':
@@ -96,13 +127,14 @@ def action_unwrapper(action_response, response_format='json', template_name=None
             return json_response(content)
         else:
             transformable_content = content.copy()
-            if content['datatype'] in STRUCTURES:
-                structure = STRUCTURES[content['datatype']]
-                if 'record' in transformable_content:
-                    transformable_content['record'] = transform_record(transformable_content['record'], structure)
-                else:
-                    for record in transformable_content['records']:
-                        record = transform_record(record, structure)
+            if 'datatype' in content:
+                if content['datatype'] in STRUCTURES:
+                    structure = STRUCTURES[content['datatype']]
+                    if 'record' in transformable_content:
+                        transformable_content['record'] = transform_record(transformable_content['record'], structure)
+                    else:
+                        for record in transformable_content['records']:
+                            record = transform_record(record, structure)
             return html_response(content, template_name=template_name)
     else:
         if response_format == 'json':
