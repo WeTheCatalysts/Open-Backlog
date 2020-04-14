@@ -1,7 +1,6 @@
 from flask import Flask, jsonify
 from google.cloud import datastore
 
-
 import actions
 import utils
 
@@ -15,12 +14,15 @@ app = Flask(__name__)
 app.config["api_id"] = secret["api_id"]
 app.config["api_password"] = secret["api_password"]
 
-#organisations, error, success = actions.Organisations(app.config["api_id"], app.config["api_password"], app.config["CACHE_MODE"]).get_organisations()
 
-#app.config["organisations"] = organisations
+@app.template_filter('timesince')
+def timesince(date):
+    return utils.humanize_timesince(date)
 
-#logging.warn(app.config["organisations"])
 
+@app.template_filter('markdown')
+def markdown(content):
+    return utils.applymarkdown(content)
 
 
 
@@ -30,9 +32,15 @@ def get_home():
     return actions.Organisations(app.config["api_id"], app.config["api_password"]).get_organisations()
 
 
+@app.route("/organisations", methods=["GET"])
+@utils.returns_html('organisations.html')
+def get_organisations():
+    return actions.Organisations(app.config["api_id"], app.config["api_password"]).get_organisations()
+
+
 @app.route("/organisations/<organisation_slug>", methods=["GET"])
 @utils.returns_html('backlog.html')
-def get_backlog(organisation_slug):
+def get_organisation(organisation_slug):
     organisations, error, success = actions.Organisations(app.config["api_id"], app.config["api_password"]).get_organisations()
     organisation_found = False
     organisation_api_id = None
@@ -48,7 +56,7 @@ def get_backlog(organisation_slug):
         backlog, error, success = actions.Backlog(organisation_api_id, organisation_api_password).get_backlog()
         if success:
             backlog["metadata"]["organisationName"] = organisation_name
-            backlog["metadata"]["organisationSlug"] = organisation_slug            
+            backlog["metadata"]["organisationSlug"] = organisation_slug
         return backlog, error, success
     else:
         return None, 'no_organisation', False
@@ -77,6 +85,11 @@ def get_backlog_item(organisation_slug, item_id):
     else:
         return None, 'no_record', False
 
+
+@app.route("/contributors", methods=["GET"])
+@utils.returns_html('contributors.html')
+def show_contributors():
+    return {}, None, True
 
 #@app.route("/", methods=["GET"])
 #@utils.returns_html('index.html')
