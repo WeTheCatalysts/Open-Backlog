@@ -15,17 +15,11 @@ class CachedProvider():
 
     def fetch_from_cache(self, key):
         if key in current_app.config:
-            logging.warn("HAS KEY")
             if current_app.config[key]:
-                logging.warn("HAS DATA")
                 cached_data =  current_app.config[key]
-                logging.warn(cached_data)
-                logging.warn("FROM CACHE")
                 if cached_data['expires'] > datetime.datetime.now():
-                    logging.warn("NOT EXPIRED")
                     return cached_data['records']
                 else:
-                    logging.warn("EXPIRED")
                     self.expire_from_cache(key)
                     return False
             else:
@@ -34,17 +28,14 @@ class CachedProvider():
             return False
 
     def expire_from_cache(self, key):
-        logging.warn("EXPIRE FROM CACHE")
         del current_app.config[key]
 
 
     def add_to_cache(self, key, object):
-        logging.warn("ADD TO CACHE")
         cached_data = {
             "expires": datetime.datetime.now() + datetime.timedelta(seconds=constants.CACHE_EXPIRY),
             "records": object
         }
-        logging.warn(cached_data)
         current_app.config[key] = cached_data
 
     def build_key(self, item_type, organisation, identifier):
