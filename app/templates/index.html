@@ -3,41 +3,39 @@
 {% block main %}
 
 <main class="main">
-    <section class="proto-style-block phases proto-spacer">
-      <div class="grid-container">
-        <div class="column-full-width">
-          <div class="inner">
-            <p class="body-copy-small"><a
-                href="#">Home</a> &gt; <a
-                href="/">Pipeline</a></p>
-            <h1 class="heading-large proto-spacer">Pipeline</h1>
-            <p class="lead">Pipeline is an initiative from The Catalyst. It aims to capture the work and intentions of the charity sector in response to COVID-19 so that collaboration and reuse can occur, and wasteful duplication is hopefully avoided.</p>
-            <p class="lead">There are currently {{metadata.organisation_count}} organisations participating. Add your organisation.</p>
-
-          </div>
+  <section class="proposition-intro vertical-spacing-bottom vertical-spacing-top">
+    <div class="grid-container">
+      <div class="column-full-width">
+        <div class="inner bottom-border-2">
+          <h1 class="heading-extra-large vertical-spacing-bottom-0-5">Pipeline for&nbsp;charities</h1>
+          <p class="body-copy-large vertical-spacing-bottom">A place for the "work in progress" of the charity sector to live and collaboration to occur.</p>
+          <p class="body-copy-large vertical-spacing-bottom">There are currently {{metadata.organisation_count}} organisations participating.</p>
+          {% include "fragments/primary_cta.njk"%}
         </div>
       </div>
-</section>
-
-
-<section>
-  <div class="grid-container">
-    <div class="column-full-width">
-      <h2>Organisations</h2>
-      <br />
-      {% for record in records %}
-          <p>
-            {% if record.steinApiId %}
-              <a href='/organisations/{{ record.organisationSlug }}'>{{record.organisationName}}</a>
-            {% endif %}
-          </p>
-      {% endfor %}
-
     </div>
-  </div>
+  </section>
 
-</section>
+  <section class="proposition-details vertical-spacing-bottom-2">
+    <div class="grid-container">
+      <div class="column-full-width">
+        <div class="inner">
+          <h2 class="heading-medium vertical-spacing-bottom-0-5">About this project</h2>
+          <p class="body-copy-medium vertical-spacing-bottom-2">We’re helping charities to work together by getting them to share information about their ongoing projects, whatever stage they're at.</p>
 
+          <h2 class="heading-medium vertical-spacing-bottom-0-5">By charities, for charities</h2>
+          <p class="body-copy-medium vertical-spacing-bottom-2">This is for charities who want to collaborate with each other to build better digital services. It aims to reduce wasted effort by showing what is already being thought about and done, and inviting offers of help/assistance.</p>
+
+          <h2 class="heading-medium vertical-spacing-bottom-0-5">Share your pipeline</h2>
+          <p class="body-copy-medium vertical-spacing-bottom-0-5">For everyone to get the most out of this platform, we need organisations like yours to share the solutions you're thinking about, researching and building.</p>
+          <p class="body-copy-medium vertical-spacing-bottom-2">Please complete <a href="#" target="_blank">this form</a> and we'll be in touch about adding your organisation's development pipeline. It's as simple for you as filling in a Google Spreadsheet.</p>
+          {% include "fragments/primary_cta.njk"%}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  
 </main>
 
 

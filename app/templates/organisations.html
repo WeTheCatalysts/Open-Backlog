@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block main %}
+
+<section class="proto-style-block phases proto-spacer">
+  <div class="grid-container">
+    <div class="column-full-width">
+      <div class="inner">
+        <p class="body-copy-small"><a href="/">Home</a> &gt; Organisations</p>
+        <h1 class="heading-large vertical-spacing-bottom-2">Browse organisations</h1>
+      </div>
+    </div>
+  </div>
+  <div class="grid-container">
+    <div class="column-full-width">
+      {% for record in records %}
+          <p>
+            {% if record.steinApiId %}
+              <a href='/organisations/{{ record.organisationSlug }}'>{{record.organisationName}}</a>
+            {% endif %}
+          </p>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% include "fragments/secondary_cta.njk" %}
+{% endblock %}

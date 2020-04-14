@@ -5,19 +5,36 @@
   <div class="grid-container">
     <div class="column-full-width">
       <div class="inner">
-        <p class="body-copy-small"><a href="#">Home</a> &gt; <a href="/">Pipeline</a> &gt; <a href='/organisations/{{ metadata.organisationSlug }}'>{{metadata.organisationName}}</a>
-        </p>
+        <p class="body-copy-small"><a href="/">Home</a> &gt; <a href="/organisations">Organisations</a> &gt; <a href='/organisations/{{ metadata.organisationSlug }}'>{{metadata.organisationName}}</a></p>
+        <div class="pipeline-item bottom-border vertical-spacing-bottom-0-5">
+          <h1 class="heading vertical-spacing-bottom-0-25 vertical-spacing-top-0-5"><a class="no-underline" href="/organisations/{{metadata.organisationSlug}}/{{record.itemId}}">{{record.initiativeName}}</a></h2>
+          <span class="state-label {{record.status}} vertical-spacing-bottom-0-5">{{record.status|title}} &mdash; {% if record.updatedAt %} updated {{record.updatedAt|timesince}}{% endif %}</span>
+          <span class="phase-label is-{{record.stage}}">{{record.stage|title}}</span>
+        </div>
+        <p>{{record.shortDescription|markdown|safe}}</p>
+        {% if record.description %}
+          <p>{{record.description|markdown|safe}}</p>
+        {% endif %}
+        {% if record.ownerEmail %}
+          <p>Owner: <a href="mailto:{{record.ownerEmail}}">{{record.owner}}</a></p>
+        {% else %}
+          <p>Owner: {{record.owner}}</p>
+        {% endif %}
+        {% if record.productUrl %}
+            <p><strong>URL:</strong> <a href="" target="_blank">{{record.productUrl}}</a></p>
+        {% endif %}
+        {% if record.createdAt %}
+            <div>
+              Created {{record.createdAt.strftime('%d %B %Y %H:%M')}}
+            </div>
+        {% endif %}
       </div>
     </div>
   </div>
 </section>
 
-<section>
-  <div class="grid-container">
-    <div class="column-full-width">
-      {% set view = 'full' %}
-      {% include "fragments/record.njk"%}
-    </div>
-  </div>
-</section>
+
+
+{% set organisation = True %}
+{% include "fragments/secondary_cta.njk" %}
 {% endblock %}

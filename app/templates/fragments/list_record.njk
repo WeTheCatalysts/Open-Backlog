@@ -1,0 +1,6 @@
+<div class="pipeline-item bottom-border vertical-spacing-bottom-0-5">
+  <h2 class="heading-medium vertical-spacing-bottom-0-25 vertical-spacing-top-0-5"><a class="no-underline" href="/organisations/{{metadata.organisationSlug}}/{{record.itemId}}">{{record.initiativeName}}</a></h2>
+  <p class="body-copy-medium vertical-spacing-bottom-0-5">{{record.shortDescription|markdown}}</p>
+  <span class="state-label {{record.status}} vertical-spacing-bottom-0-5">{{record.status|title}} &mdash; {% if record.updatedAt %} updated {{record.updatedAt|timesince}}{% endif %}</span>
+  <span class="phase-label is-{{record.stage}}">{{record.stage|title}}</span>
+</div>

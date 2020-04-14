@@ -2,62 +2,65 @@
 
 {% block main %}
 
-
-<main class="main">
-    <section class="proto-style-block phases proto-spacer">
+<section class="recipes-list vertical-spacing-bottom-2">
       <div class="grid-container">
         <div class="column-full-width">
           <div class="inner">
             <p class="body-copy-small"><a
-                href="#">Home</a> &gt; <a
-                href="/">Pipeline</a></p>
-            <h1 class="heading-large proto-spacer space-by-2">{{metadata.organisationName}}</h1>
+                href="/">Home</a> &gt; <a
+                href="/organisations">Organisations</a>
+              </p>
+            <h1 class="heading-large vertical-spacing-bottom-2">{{metadata.organisationName}}</h1>
           </div>
         </div>
       </div>
 
       {% include "fragments/stage_panels.njk"%}
+</section>
 
-      <div class="grid-container">
-        <div class="column-full-width">
-          There are currently
-          {% if metadata.itemcount == 0 %}
-          no
-          {% else %}
-          {% if metadata.status_count == 1 %}
-          {% for status in metadata.stats.statuses %}
-            {{metadata.stats.statuses[status]}} {{status|title}}
+<section class="vertical-spacing-bottom-0-5">
+  <div class="grid-container">
+    <div class="column-full-width">
+      There are currently
+      {% if metadata.itemcount == 0 %}
+      no
+      {% else %}
+      {% if metadata.status_count == 1 %}
+      {% for status in metadata.stats.statuses %}
+        {{metadata.stats.statuses[status]}} {{status|title}}
+      {% endfor %}
+      {% else %}
+        {% for status in metadata.stats.statuses %}
+        {% if not loop.first and not loop.last %}
+          ,
+        {% endif %}
+        {% if loop.last %}
+          and
+          {% endif %}
+          {{metadata.stats.statuses[status]}} {{status|title}}
           {% endfor %}
-          {% else %}
-            {% for status in metadata.stats.statuses %}
-            {% if not loop.first and not loop.last %}
-              ,
-            {% endif %}
-            {% if loop.last %}
-              and
-              {% endif %}
-              {{metadata.stats.statuses[status]}} {{status|title}}
-              {% endfor %}
-          {% endif %}
-          {% endif %}
-          items for this organisation.
-        </div>
+      {% endif %}
+      {% endif %}
+      items for this organisation.
       </div>
-    </section>
+    </div>
+</section>
 
-    {% if metadata.itemcount != 0 %}
-
-    {% set view = 'list' %}
-    {% for record in records %}
-    <section>
+{% if metadata.itemcount != 0 %}
+    <section class="pipeline-cards">
       <div class="grid-container">
         <div class="column-full-width">
-            {% include "fragments/record.njk"%}
+          <div class="inner top-border">
+            {% for record in records %}
+                {% include "fragments/list_record.njk"%}
+            {% endfor %}
+          </div>
         </div>
       </div>
     </section>
-    {% endfor %}
-    {% endif %}
-  </main>
+{% endif %}
+
+{% set organisation = True %}
+{% include "fragments/secondary_cta.njk" %}
 
 {% endblock %}
