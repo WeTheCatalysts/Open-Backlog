@@ -187,27 +187,43 @@ class SteinProvider(Provider):
 
 
     def fetch_backlog_item(self, itemId):
-        backlog_url = self.build_url('backlog')
-        items, error, status = self.fetch_url(backlog_url)
-        if status:
-            item_data = None
-            for item in items:
-                if item['itemId']:
-                    if item['itemId'] == itemId:
-                        item_data = self.clean_item(item)
-            if item_data is not None:
-                return {
-                        'record': item_data,
-                        'metadata': {},
-                        'datatype': 'record'
-                        } , error, status
-            else:
-                return None, {
-                        "status": 404,
-                        "message": "The specified item could not be found"
-                    }, False
+        key = CachedProvider().build_key('backlog', self._api_id, itemId)
+        cached_data = CachedProvider().fetch_from_cache(key)
+        if cached_data:
+            return cached_data, None, True
         else:
-            return items, error, status
+            backlog_url = self.build_url('backlog')
+            items, error, status = self.fetch_url(backlog_url)
+            if status:
+                item_data = None
+                for item in items:
+                    if item['itemId']:
+                        if item['itemId'] == itemId:
+                            item_data = self.clean_item(item)
+                if item_data is not None:
+                    key = CachedProvider().build_key('blogs', self._api_id, None)
+                    blogposts = CachedProvider().fetch_from_cache(key)
+                    relevant_blogposts = []
+                    if not blogposts:
+                        blog_url = self.build_url('blogs')
+                        blogposts, error, status = self.fetch_url(blog_url)
+                    if len(blogposts) > 0:
+                        for blogpost in blogposts:
+                            if blogpost['itemId'] == itemId:
+                                relevant_blogposts.insert(0, blogpost)
+                    item_data['blog'] = relevant_blogposts
+                    return {
+                            'record': item_data,
+                            'metadata': {},
+                            'datatype': 'record'
+                            } , error, status
+                else:
+                    return None, {
+                            "status": 404,
+                            "message": "The specified item could not be found"
+                        }, False
+            else:
+                return items, error, status
 
 
 DefaultProvider = SteinProvider

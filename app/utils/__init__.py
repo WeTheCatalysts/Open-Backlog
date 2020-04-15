@@ -42,7 +42,9 @@ STRUCTURES = {
 }
 
 def humanize_timesince(date):
-    delta = datetime.datetime.now() - date
+    date = from_iso_datetime(date)
+
+    delta = datetime.datetime.utcnow() - date
 
     num_years = math.floor(delta.days / 365)
     if (num_years >= 1):
@@ -65,16 +67,19 @@ def humanize_timesince(date):
             return str(delta.days) +  " days ago"
 
     num_hours = math.floor(delta.seconds / 3600)
-    if (num_hours >= 1):
-        return str(num_hours) +  " hour ago"
-    else:
-        return str(num_hours) +  " hours ago"
+    logging.warn(num_hours)
+    if (num_hours > 0):
+        if (num_hours == 1):
+            return str(num_hours) +  " hour ago"
+        else:
+            return str(num_hours) +  " hours ago"
 
     num_minutes = math.floor(delta.seconds / 60)
-    if (num_minutes >= 1):
-        return str(num_minutes) +  " minute ago"
-    else:
-        return str(num_minutes) +  " minutes ago"
+    if (num_minutes > 0):
+        if (num_minutes == 1):
+            return str(num_minutes) +  " minute ago"
+        else:
+            return str(num_minutes) +  " minutes ago"
 
     return "just a few seconds ago"
 
