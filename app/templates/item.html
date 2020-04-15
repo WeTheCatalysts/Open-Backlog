@@ -1,5 +1,8 @@
 {% extends "base.html" %}
 
+{% block title %}Pipeline | {{record.initiativeName}} from {{metadata.organisationName}}{% endblock %}
+
+
 {% block main %}
 <section class="proto-style-block phases proto-spacer">
   <div class="grid-container">
@@ -28,13 +31,29 @@
               Created {{record.createdAt.strftime('%d %B %Y %H:%M')}}
             </div>
         {% endif %}
+        <h3 class="vertical-spacing-top-0-5">Latest updates</h3>
+        {% for post in record.blog %}
+          <p class="body-copy-medium">{{post.postContent}}</p>
+          <div class="body-copy-small">Updated {{post.createdAt|timesince}}</div>
+        {% endfor %}
       </div>
     </div>
   </div>
 </section>
 
-
-
 {% set organisation = True %}
 {% include "fragments/secondary_cta.njk" %}
+<section class="vertical-spacing-top-0-5">
+  <div class="grid-container">
+    <div class="column-full-width">
+      <div class="inner">
+        <h4 class="vertical-spacing-top-0-5">Debug data</h4>
+        <div>
+          {{record}}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 {% endblock %}
