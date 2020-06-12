@@ -13,9 +13,8 @@ import logging
 
 STRUCTURES = {
     "backlog": {
-        "blogURL": "commaseparated",
-        "additionalInfoURL": "commaseparated",
-        "blogURL": "commaseparated",
+        "blogUrl": "commaseparated",
+        "additionalInfoUrl": "commaseparated",
         "lifeEvents": "commaseparated",
         "servicePatterns": "commaseparated",
         "beneficiaries": "commaseparated",
@@ -26,8 +25,8 @@ STRUCTURES = {
         "updatedAt": "datetime"
     },
     "record": {
-        "blogURL": "commaseparated",
-        "additionalInfoURL": "commaseparated",
+        "blogUrl": "commaseparated",
+        "additionalInfoUrl": "commaseparated",
         "blogURL": "commaseparated",
         "lifeEvents": "commaseparated",
         "servicePatterns": "commaseparated",
@@ -92,8 +91,8 @@ def applymarkdown(content):
 
 
 def commaseparated_to_array(content):
-    array = []
-    if content:
+    if content and len(content) > 0:
+        array = []
         if ',' in content:
             array = content.split(',')
         else:
@@ -102,7 +101,9 @@ def commaseparated_to_array(content):
             else:
                 array = content
         array = [item.strip() for item in array]
-    return array
+        return array
+    else:
+        return None
 
 def from_iso_datetime(content):
     if isinstance(content, str):
