@@ -2,7 +2,6 @@
 
 {% block title %}Pipeline | {{record.initiativeName}} from {{metadata.organisationName}}{% endblock %}
 
-
 {% block main %}
 <section class="proto-style-block phases proto-spacer">
   <div class="grid-container">
@@ -14,28 +13,62 @@
           <span class="state-label {{record.status}} vertical-spacing-bottom-0-5">{{record.status|title}} &mdash; {% if record.updatedAt %} updated {{record.updatedAt|timesince}}{% endif %}</span>
           <span class="phase-label is-{{record.stage}}">{{record.stage|title}}</span>
         </div>
-        <p>{{record.shortDescription|markdown|safe}}</p>
+        {% if record.shortDescription %}
+          <p>{{record.shortDescription|markdown|safe}}</p>
+        {% endif %}
         {% if record.description %}
           <p>{{record.description|markdown|safe}}</p>
         {% endif %}
         {% if record.ownerEmail %}
-          <p>Owner: <a href="mailto:{{record.ownerEmail}}">{{record.owner}}</a></p>
+        <p>
+          <h3>
+            Owner
+          </h3>
+          <div>
+            <a href="mailto:{{record.ownerEmail}}">{{record.owner}}</a>
+          </div>
+        </p>
         {% else %}
-          <p>Owner: {{record.owner}}</p>
+          <p>
+            <div>
+              Owner
+            </div>
+            <div>
+              {{record.owner}}
+            </div>
+          </p>
+        {% endif %}
+        {% if record.blogUrl %}
+          <h3>Blog posts about this service</h3>
+          <ul>
+          {% for post in record.blogUrl%}
+            <li><a href="{{post}}" target="_blank">{{post}}</li>
+          {% endfor %}
+          </ul>
+        {% endif %}
+        <p>
+        {% if record.productUrl %}
+               <a href="{{record.productUrl}}" target="_blank">View this service</a>
+        {% endif %}
+        {% if record.repositoryUrl %}
+               <a href="{{record.repositoryUrl}}" target="_blank">See the code</a>
         {% endif %}
         {% if record.productUrl %}
-            <p><strong>URL:</strong> <a href="" target="_blank">{{record.productUrl}}</a></p>
+               <a href="{{record.issueUrl}}" target="_blank">See/post an issue</a>
         {% endif %}
+        </p>
         {% if record.createdAt %}
-            <div>
-              Created {{record.createdAt.strftime('%d %B %Y %H:%M')}}
-            </div>
+        <div>
+          Created {{record.createdAt.strftime('%d %B %Y %H:%M')}}
+        </div>
         {% endif %}
+        {% if record.blog %}
         <h3 class="vertical-spacing-top-0-5">Latest updates</h3>
         {% for post in record.blog %}
           <p class="body-copy-medium">{{post.postContent}}</p>
           <div class="body-copy-small">Updated {{post.createdAt|timesince}}</div>
         {% endfor %}
+        {% endif %}
       </div>
     </div>
   </div>
@@ -55,5 +88,4 @@
     </div>
   </div>
 </section>
-
 {% endblock %}
