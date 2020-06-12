@@ -29,6 +29,10 @@ def markdown(content):
 @app.route("/", methods=["GET"])
 @utils.returns_html('index.html')
 def get_home():
+    organisations, errors, success = actions.Organisations(app.config["api_id"], app.config["api_password"]).get_organisations()
+    logging.warn(organisations)
+    logging.warn(errors)
+    logging.warn(success)
     return actions.Organisations(app.config["api_id"], app.config["api_password"]).get_organisations()
 
 
